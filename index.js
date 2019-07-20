@@ -2,6 +2,11 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const mongoose = require("mongoose");
+
+var uri =
+  "mongodb+srv://alain123:alain123@shopapi-rk6ps.mongodb.net/test?retryWrites=true&w=majority";
+mongoose.connect(uri, { useNewUrlParser: true }, console.log("MongoDb Connected"));
 
 //parse incoming requests
 app.use(express.urlencoded({ extended: false }));
