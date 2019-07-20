@@ -3,15 +3,32 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 
-//product route
-const productRoutes = require("./api/routes/products");
-//orders route
-const orderRoutes = require("./api/routes/orders");
+//parse incoming requests
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
-app.use(morgan("dev"));
+//Cors Headers | prevent cors errors
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  if (req.method === "OPTIONS") {
+    res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE");
+    return res.status(200).json({});
+  }
+  next();
+});
+
+//Routes
+const productRoutes = require("./api/routes/products");
+const orderRoutes = require("./api/routes/orders");
 
 app.use("/products", productRoutes);
 app.use("/orders", orderRoutes);
+
+app.use(morgan("dev"));
 
 //error handling
 app.use((req, res, next) => {
