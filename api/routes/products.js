@@ -5,10 +5,25 @@ const Product = require("../models/product");
 
 router.get("/", (req, res, next) => {
   Product.find()
+    .select("name price _id")
     .exec()
-    .then(doc => {
-      console.log(doc);
-      res.status(200).json(doc);
+    .then(docs => {
+      //metada
+      const response = {
+        count: docs.length,
+        products: docs.map(doc => {
+          return {
+            _id: doc._id,
+            name: doc.name,
+            price: doc.price,
+            request: {
+              type: "GET",
+              url: "http://localhost:3000/products/" + doc._id
+            }
+          };
+        })
+      };
+      res.status(200).json(response);
     })
     .catch(doc => {
       console.log(doc);
@@ -27,10 +42,9 @@ router.post("/", (req, res, next) => {
     .save()
     .then(result => {
       res.status(201).json({
-        message: "Handle POST Request to /products",
+        message: "Product successfully saved",
         createdProduct: product
       });
-      console.log(result);
     })
     .catch(err => {
       console.log(err);
@@ -46,7 +60,6 @@ router.get("/:productID", (req, res, next) => {
   Product.findById(id)
     .exec()
     .then(doc => {
-      console.log(doc);
       res.status(200).json(doc);
     })
     .catch(err => {
@@ -65,8 +78,9 @@ router.patch("/:productID", (req, res, next) => {
   Product.update({ _id: id }, { $set: updateOps })
     .exec()
     .then(result => {
-      console.log(result);
-      res.status(200).json(result);
+      res.status(200).json({
+        message: "Product successfully updated"
+      });
     })
     .catch(err => {
       res.status(500).json({
@@ -79,7 +93,9 @@ router.delete("/:productID", (req, res, next) => {
   Product.remove({ _id: id })
     .exec()
     .then(result => {
-      res.status(200).json("product Deleted");
+      res.status(200).json({
+        message: "Product successfully deleted"
+      });
     })
     .catch(err => {
       console.log(err);
