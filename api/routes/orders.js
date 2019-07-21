@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
+//GET
 router.get("/", (req, res, next) => {
   res.status(200).json({
     message: "Orders were taken"
   });
 });
+
+//POST
 router.post("/", (req, res, next) => {
   const order = {
     productId: req.body.productId,
@@ -16,12 +19,15 @@ router.post("/", (req, res, next) => {
     order: order
   });
 });
+//GET ID
 router.get("/:orderID", (req, res, next) => {
   res.status(200).json({
     message: "Orders details",
     orderID: req.params.orderID
   });
 });
+
+//DELETE
 router.delete("/:orderID", (req, res, next) => {
   res.status(200).json({
     message: "Orders deleted",
