@@ -6,6 +6,7 @@ const Orders = require("../models/orders");
 router.get("/", (req, res, next) => {
   Orders.find()
     .select("quantity _id product")
+    .populate("product", "name")
     .exec()
     .then(docs => {
       res.status(200).json({
@@ -63,7 +64,9 @@ router.post("/", (req, res, next) => {
 //GET ID
 router.get("/:orderID", (req, res, next) => {
   Orders.findById(req.params.orderID)
+    .populate("product", "name")
     .exec()
+
     .then(order => {
       res.status(200).json({
         order: order,
@@ -84,6 +87,7 @@ router.get("/:orderID", (req, res, next) => {
 router.delete("/:orderID", (req, res, next) => {
   Orders.remove({ _id: req.params.orderID })
     .exec()
+
     .then(order => {
       res.status(200).json({
         message: "Order Deleted",
