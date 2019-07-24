@@ -5,7 +5,9 @@ const morgan = require("morgan");
 const mongoose = require("mongoose");
 
 mongoose.connect(
-  "mongodb+srv://alain123:alain123@shopapi-rk6ps.mongodb.net/test?retryWrites=true&w=majority",
+  "mongodb+srv://alain123:" +
+    process.env.MONGO_ATLAS_PW +
+    "@shopapi-rk6ps.mongodb.net/test?retryWrites=true&w=majority",
   { useNewUrlParser: true },
   console.log("MongoDb Connected")
 );
