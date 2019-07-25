@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const Orders = require("../models/orders");
+const auth = require("../middleware/auth");
+
 //GET
-router.get("/", (req, res, next) => {
+router.get("/", auth, (req, res, next) => {
   Orders.find()
     .select("quantity _id product")
     .populate("product", "name")
@@ -33,7 +35,7 @@ router.get("/", (req, res, next) => {
 });
 
 //POST
-router.post("/", (req, res, next) => {
+router.post("/", auth, (req, res, next) => {
   //setup
   const order = new Orders({
     _id: mongoose.Types.ObjectId(),
@@ -62,7 +64,7 @@ router.post("/", (req, res, next) => {
     });
 });
 //GET ID
-router.get("/:orderID", (req, res, next) => {
+router.get("/:orderID", auth, (req, res, next) => {
   Orders.findById(req.params.orderID)
     .populate("product", "name")
     .exec()
@@ -84,7 +86,7 @@ router.get("/:orderID", (req, res, next) => {
 });
 
 //DELETE
-router.delete("/:orderID", (req, res, next) => {
+router.delete("/:orderID", auth, (req, res, next) => {
   Orders.remove({ _id: req.params.orderID })
     .exec()
 
