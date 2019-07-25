@@ -8,5 +8,4 @@ bcrypt <br>
 express<br>
 jsonwebtoken<br>
 mongoose<br>
-morgan<br>
 multer<br>
