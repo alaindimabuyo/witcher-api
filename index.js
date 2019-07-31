@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 mongoose.connect(
   "mongodb+srv://alain123:" +
     process.env.MONGO_ATLAS_PW +
-    "@shopapi-rk6ps.mongodb.net/test?retryWrites=true&w=majority",
+    "@witcherapi-rk6ps.mongodb.net/test?retryWrites=true&w=majority",
   { useNewUrlParser: true },
   console.log("MongoDb Connected")
 );
@@ -35,11 +35,11 @@ app.use((req, res, next) => {
 });
 
 //Routes
-const productRoutes = require("./api/routes/products");
-const orderRoutes = require("./api/routes/orders");
+const characterRoutes = require("./api/routes/character");
+const bookRoutes = require("./api/routes/books");
 const userRoutes = require("./api/routes/user");
-app.use("/products", productRoutes);
-app.use("/orders", orderRoutes);
+app.use("/characters", characterRoutes);
+app.use("/books", bookRoutes);
 app.use("/user", userRoutes);
 
 //error handling

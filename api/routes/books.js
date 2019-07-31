@@ -1,26 +1,56 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const Orders = require("../models/orders");
+const Books = require("../models/books");
 const auth = require("../middleware/auth");
+const multer = require("multer");
+
+//image
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, "./uploads/books");
+  },
+  filename: function(req, file, cb) {
+    cb(null, Date.now() + file.originalname);
+  }
+});
+//filter image types
+const fileFilter = (req, file, cb) => {
+  // reject a file
+  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5
+  },
+  fileFilter: fileFilter
+});
 
 //GET
-router.get("/", auth, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const response = await Orders.find()
-      .select("quantity _id product")
-      .populate("product", "name");
+    const response = await Books.find();
 
     res.status(200).json({
       count: response.length,
-      orders: response.map(doc => {
+      Books: response.map(doc => {
         return {
           _id: doc._id,
-          product: doc.product,
-          quantity: doc.quantity,
+          book: doc.book,
+          sypnosis: doc.sypnosis,
+          author: doc.author,
+          pages: doc.pages,
+          published: doc.published,
+          bookImage: doc.bookImage,
           request: {
             type: "GET",
-            url: "http://localhost:3000/orders/" + doc.id
+            url: "http://localhost:3000/books/" + doc.id
           }
         };
       })
@@ -58,25 +88,25 @@ router.get("/", auth, async (req, res) => {
 });
 
 //POST
-router.post("/", auth, async (req, res, next) => {
+router.post("/", upload.single("bookImage"), async (req, res, next) => {
   //setup
 
   try {
-    const newOrder = new Orders({
+    const newBooks = new Books({
       _id: mongoose.Types.ObjectId(),
-      quantity: req.body.quantity,
-      product: req.body.productId
+      book: req.body.book,
+      pages: req.body.pages,
+      sypnosis: req.body.sypnosis,
+      author: req.body.author,
+      published: req.body.published,
+      bookImage: " /uploads/books/" + req.file.filename
     });
 
-    const order = await newOrder.save();
+    const book = await newBooks.save();
 
     res.status(201).json({
-      message: "Order Stored",
-      createOrder: {
-        _id: order._id,
-        product: order.product,
-        quantity: order.quantity
-      }
+      message: "Book Stored",
+      createdBook: book
     });
   } catch (err) {
     console.log(err.message);
@@ -105,15 +135,17 @@ router.post("/", auth, async (req, res, next) => {
   //   });
 });
 //GET ID
-router.get("/:orderID", auth, async (req, res) => {
+router.get("/:bookID", async (req, res) => {
   try {
-    const order = await Orders.findById(req.params.orderID).populate("product", "name");
+    const book = await Books.findById(req.params.bookID).select(
+      "book author pages published bookImage"
+    );
 
     res.json({
-      order: order,
+      book: book,
       request: {
         type: "GET",
-        url: "http://localhost:3000/orders"
+        url: "http://localhost:3000/books"
       }
     });
   } catch (err) {
@@ -141,10 +173,10 @@ router.get("/:orderID", auth, async (req, res) => {
 });
 
 //DELETE
-router.delete("/:orderID", auth, async (req, res) => {
+router.delete("/:bookID", async (req, res) => {
   try {
-    await Orders.findByIdAndRemove(req.params.orderID);
-    res.json({ message: "Product Removed" });
+    await Books.findByIdAndRemove(req.params.bookID);
+    res.json({ message: "Book Removed" });
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Server ERROR");

@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const Product = require("../models/product");
+const Characters = require("../models/characters");
 const multer = require("multer");
 const auth = require("../middleware/auth");
 //image
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, "./uploads");
+    cb(null, "./uploads/characters");
   },
   filename: function(req, file, cb) {
     cb(null, Date.now() + file.originalname);
@@ -33,18 +33,18 @@ const upload = multer({
 
 router.get("/", async (req, res, next) => {
   try {
-    const response = await Product.find().select("name price _id productImage");
+    const response = await Characters.find().select("name price _id characterImage");
     res.json({
       count: response.length,
-      products: response.map(doc => {
+      books: response.map(doc => {
         return {
           _id: doc._id,
           name: doc.name,
           price: doc.price,
-          productImage: doc.productImage,
+          characterImage: doc.characterImage,
           request: {
             type: "GET",
-            url: "http://localhost:3000/products/" + doc._id
+            url: "http://localhost:5000/characters/" + doc._id
           }
         };
       })
@@ -81,20 +81,20 @@ router.get("/", async (req, res, next) => {
   //   });
 });
 
-router.post("/", auth, upload.single("productImage"), async (req, res) => {
+router.post("/", auth, upload.single("characterImage"), async (req, res) => {
   //save to DB
   try {
-    const newProduct = new Product({
+    const newCharacters = new Characters({
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
       price: req.body.price,
-      productImage: " /uploads/" + req.file.filename
+      characterImage: " /uploads/characters/" + req.file.filename
     });
 
-    const product = await newProduct.save();
+    const character = await newCharacters.save();
     res.status(201).json({
-      message: "Product successfully saved",
-      createdProduct: product
+      message: "Character successfully saved",
+      creactedCharacter: character
     });
   } catch (err) {
     console.log(err.message);
@@ -118,10 +118,10 @@ router.post("/", auth, upload.single("productImage"), async (req, res) => {
   //   });
 });
 
-router.get("/:productID", async (req, res) => {
+router.get("/:characterID", async (req, res) => {
   try {
-    const response = await Product.findById(req.params.productID).select(
-      "name price _id productImage"
+    const response = await Characters.findById(req.params.characterID).select(
+      "name price _id characterImage"
     );
     res.json(response);
   } catch (err) {
@@ -141,18 +141,18 @@ router.get("/:productID", async (req, res) => {
   //   });
 });
 
-router.patch("/:productID", async (req, res, next) => {
+router.patch("/:characterID", async (req, res, next) => {
   const updateOps = {};
   for (const ops in req.body) {
     updateOps[ops.propName] = ops.value;
   }
   try {
-    product = await Product.findByIdAndUpdate(
-      req.params.productID,
+    character = await Characters.findByIdAndUpdate(
+      req.params.characterID,
       { $set: updateOps },
       { new: true }
     );
-    res.json(product);
+    res.json(character);
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Server ERROR");
@@ -171,10 +171,10 @@ router.patch("/:productID", async (req, res, next) => {
   //     });
   //   });
 });
-router.delete("/:productID", auth, async (req, res) => {
+router.delete("/:characterID", auth, async (req, res) => {
   try {
-    await Product.findByIdAndRemove(req.params.productID);
-    res.json({ message: "Product Removed" });
+    await Characters.findByIdAndRemove(req.params.characterID);
+    res.json({ message: "Character Removed" });
   } catch (err) {
     console.log(err.message);
     res.status(500).send("Server ERROR");
