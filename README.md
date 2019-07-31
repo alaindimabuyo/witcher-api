@@ -1,11 +1,9 @@
 ## Project title
 
-The Witcher Shop Api
+The Witcher Api
 
 ### Built with
 
-bcrypt <br>
+react <br>
 express<br>
-jsonwebtoken<br>
-mongoose<br>
-multer<br>
+mongodb<br>
