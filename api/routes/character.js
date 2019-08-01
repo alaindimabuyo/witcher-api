@@ -33,14 +33,18 @@ const upload = multer({
 
 router.get("/", async (req, res, next) => {
   try {
-    const response = await Characters.find().select("name price _id characterImage");
+    const response = await Characters.find();
     res.json({
       count: response.length,
-      books: response.map(doc => {
+      characters: response.map(doc => {
         return {
           _id: doc._id,
           name: doc.name,
-          price: doc.price,
+          gender: doc.gender,
+          race: doc.race,
+          profession: doc.profession,
+          abilities: doc.abilities,
+          nationality: doc.nationality,
           characterImage: doc.characterImage,
           request: {
             type: "GET",
@@ -81,13 +85,17 @@ router.get("/", async (req, res, next) => {
   //   });
 });
 
-router.post("/", auth, upload.single("characterImage"), async (req, res) => {
+router.post("/", upload.single("characterImage"), async (req, res) => {
   //save to DB
   try {
     const newCharacters = new Characters({
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
-      price: req.body.price,
+      gender: req.body.gender,
+      race: req.body.race,
+      profession: req.body.profession,
+      abilities: req.body.abilities,
+      nationality: req.body.nationality,
       characterImage: " /uploads/characters/" + req.file.filename
     });
 
@@ -120,9 +128,7 @@ router.post("/", auth, upload.single("characterImage"), async (req, res) => {
 
 router.get("/:characterID", async (req, res) => {
   try {
-    const response = await Characters.findById(req.params.characterID).select(
-      "name price _id characterImage"
-    );
+    const response = await Characters.findById(req.params.characterID);
     res.json(response);
   } catch (err) {
     console.log(err.message);
@@ -171,7 +177,7 @@ router.patch("/:characterID", async (req, res, next) => {
   //     });
   //   });
 });
-router.delete("/:characterID", auth, async (req, res) => {
+router.delete("/:characterID", async (req, res) => {
   try {
     await Characters.findByIdAndRemove(req.params.characterID);
     res.json({ message: "Character Removed" });

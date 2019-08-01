@@ -138,7 +138,7 @@ router.post("/", upload.single("bookImage"), async (req, res, next) => {
 router.get("/:bookID", async (req, res) => {
   try {
     const book = await Books.findById(req.params.bookID).select(
-      "book author pages published bookImage"
+      "book author pages published bookImage sypnosis"
     );
 
     res.json({

@@ -16,7 +16,7 @@ mongoose.connect(
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
 //show image publicly
 app.use("/uploads", express.static("uploads"));
 

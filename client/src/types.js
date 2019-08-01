@@ -1,2 +1,4 @@
-export const GET_WITCHER = "GET_WITCHER";
+export const GET_BOOKS = "GET_BOOKS";
+export const GET_CURRENTBOOK = "GET_CURRENTBOOK";
+export const GET_CHARACTERS = "GET_CHARACTERS";
 export const PRODUCT_ERROR = "PRODUCT_ERROR";

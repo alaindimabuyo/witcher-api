@@ -1,11 +1,7 @@
 import React, { Fragment } from "react";
-import Witcher from "../components/Witcher";
+
 const Home = () => {
-  return (
-    <Fragment>
-      <Witcher />
-    </Fragment>
-  );
+  return <Fragment />;
 };
 
 export default Home;
