@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -6,6 +6,8 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import { Link } from "react-router-dom";
+import WitcherContext from "../context/WitcherContext";
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
@@ -20,7 +22,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function ButtonAppBar() {
   const classes = useStyles();
-
+  const witchContext = useContext(WitcherContext);
+  const { clearBooks } = witchContext;
   return (
     <div className={classes.root}>
       <AppBar position='static'>
@@ -34,13 +37,21 @@ export default function ButtonAppBar() {
             The Witcher
           </Typography>
           <Button color='inherit'>
-            <Link to={"/books"} style={{ color: "white", textDecoration: "none" }}>
+            <Link
+              onClick={clearBooks}
+              to={"/books"}
+              style={{ color: "white", textDecoration: "none" }}
+            >
               Books
             </Link>
           </Button>
           <Button color='inherit'>
             {" "}
-            <Link to={"/characters"} style={{ color: "white", textDecoration: "none" }}>
+            <Link
+              onClick={clearBooks}
+              to={"/characters"}
+              style={{ color: "white", textDecoration: "none" }}
+            >
               characters
             </Link>
           </Button>

@@ -1,7 +1,8 @@
 import React, { Fragment, useContext, useEffect } from "react";
 import WitcherContext from "../context/WitcherContext";
 import styled from "styled-components";
-import { Container, Box } from "@material-ui/core";
+import { Link } from "react-router-dom";
+import { Container, Box, Paper, makeStyles } from "@material-ui/core";
 
 const WitcherCharacters = () => {
   const witcherContext = useContext(WitcherContext);
@@ -13,7 +14,19 @@ const WitcherCharacters = () => {
     //eslint-disable-next-line
   }, []);
 
-  console.log(characters);
+  const useStyles = makeStyles(theme => ({
+    root: {
+      flexGrow: 1
+    },
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: "center",
+      color: theme.palette.text.primary
+    }
+  }));
+
+  const classes = useStyles();
+
   return (
     <Fragment>
       <Box component='span' m={1}>
@@ -21,8 +34,12 @@ const WitcherCharacters = () => {
           <Grid>
             {characters.map(item => (
               <div key={item._id}>
-                <ImageWrap src={item.characterImage} alt='asd' />
-                <h2>{item.name}</h2>
+                <Paper className={classes.paper}>
+                  <Link to={`/characters/${item._id}`}>
+                    <ImageWrap src={item.characterImage} alt='asd' />
+                  </Link>
+                  <h2>{item.name}</h2>
+                </Paper>
               </div>
             ))}
           </Grid>

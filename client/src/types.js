@@ -1,4 +1,7 @@
 export const GET_BOOKS = "GET_BOOKS";
+export const ADD_BOOK = "ADD_BOOK";
+export const CLEAR_BOOKS = "CLEAR_BOOKS";
 export const GET_CURRENTBOOK = "GET_CURRENTBOOK";
+export const GET_CURRENTCHARACTER = "GET_CURRENTCHARACTER";
 export const GET_CHARACTERS = "GET_CHARACTERS";
 export const PRODUCT_ERROR = "PRODUCT_ERROR";

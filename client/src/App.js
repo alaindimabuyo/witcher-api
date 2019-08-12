@@ -6,6 +6,7 @@ import "./App.css";
 import Books from "./pages/Books";
 import CurrentBook from "./components/BookItem";
 import Character from "./pages/Character";
+import CurrentCharacter from "./components/CharacterItem";
 import Navbar from "./components/Navbar";
 
 function App() {
@@ -18,7 +19,7 @@ function App() {
             <Route exact path='/books' component={Books} />
             <Route exact path='/books/:_id' component={CurrentBook} />
             <Route exact path='/characters' component={Character} />
-            />
+            <Route exact path='/characters/:_id' component={CurrentCharacter} />
           </Switch>
         </div>
       </Router>
