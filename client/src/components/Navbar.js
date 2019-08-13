@@ -33,9 +33,7 @@ export default function ButtonAppBar() {
               Home
             </Link>
           </IconButton>
-          <Typography variant='h6' className={classes.title}>
-            The Witcher
-          </Typography>
+
           <Button color='inherit'>
             <Link
               onClick={clearBooks}
@@ -55,6 +53,7 @@ export default function ButtonAppBar() {
               characters
             </Link>
           </Button>
+          <Typography variant='h6' className={classes.title} />
           <Button color='inherit'>
             {" "}
             <Link to={"/login"} style={{ color: "white", textDecoration: "none" }}>
